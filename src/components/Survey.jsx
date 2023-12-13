@@ -1,52 +1,9 @@
 "use client";
-import { useState } from "react";
-import { database } from "@/utils/firebase";
-import { push, ref, set } from "firebase/database";
-import { v1 as uuidv1 } from "uuid";
 
-const Survey = () => {
-  const initialData = {
-    uid: uuidv1(),
-    jobTitle: "",
-    jobType: "",
-    xp: "",
-    unitXp: "",
-    salary: "",
-    per: "",
-    currency: "",
-    country: "",
-  };
-
-  const [formData, setFormData] = useState(initialData);
-  const [error, setError] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value,
-    });
-  };
-
-  const handleSumbit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const surveyRef = ref(database, "devSurvey");
-      const newDataRef = push(surveyRef);
-
-      await set(newDataRef, formData);
-
-      alert("Thanks for your engagement ❤️");
-      setError(false);
-      setFormData(initialData);
-    } catch (error) {
-      setError(error.message);
-    }
-  };
-
+const Survey = ({ handleChange, handleSumbit, formData, error }) => {
   return (
-    <div className="flex justify-evenly gap-16 border border-gray-400 p-10 rounded-l w-full">
-      <div className="flex flex-col gap-3 border-r-2 p-6">
+    <div className="flex justify-evenly gap-16 border border-gray-400 p-10 rounded-l">
+      <div className="flex flex-col gap-3 p-6">
         <h1 className="text-3xl text-center font-semibold my-7">
           Share Your Job Income 👀
         </h1>
@@ -126,40 +83,6 @@ const Survey = () => {
             </button>
           )}
         </form>
-      </div>
-
-      <div className="flex flex-col gap-4 flex-1 p-6">
-        <h2 className="text-3xl text-center font-semibold my-7">
-          Your Survey ✨
-        </h2>
-        {["Job Title", "Experience", "Salary"].map((section) => (
-          <div key={section} className="flex gap-4 items-center">
-            <div className="text-2xl">{section} :</div>
-            <div className="flex gap-1 text-opacity-70">
-              {section === "Job Title" &&
-                ["jobTitle", "jobType"].map((field) => (
-                  <span key={field}>
-                    {formData[field] !== "" && formData[field]}
-                  </span>
-                ))}
-              {section === "Experience" &&
-                ["xp", "unitXp"].map((field) => (
-                  <span key={field}>
-                    {formData[field] !== "" && formData[field]}
-                  </span>
-                ))}
-              {section === "Salary" &&
-                ["salary", "currency", "per"].map((field) => (
-                  <span key={field}>
-                    {formData[field] !== "" && formData[field]}
-                  </span>
-                ))}
-              {section === "Salary" && formData.country !== "" && (
-                <span>{formData.country}</span>
-              )}
-            </div>
-          </div>
-        ))}
       </div>
 
       {error && <p className="text-red-500 mt-5">{error}</p>}
