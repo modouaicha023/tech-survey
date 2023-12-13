@@ -1,7 +1,9 @@
 "use client";
 import { useState } from "react";
+import { database } from "@/utils/firebase";
+import { push, ref, set } from "firebase/database";
 
-// const firebase = require('firebase');
+// const app = app.database("");
 const uuid = require("uuid");
 
 export default function SurveyItem(Question) {
@@ -16,6 +18,7 @@ export default function SurveyItem(Question) {
     currency: "",
     country: "",
   };
+
   const [formData, setFormData] = useState(initialData);
   const [error, setError] = useState(false);
 
@@ -28,6 +31,19 @@ export default function SurveyItem(Question) {
 
   const handleSumbit = (e) => {
     e.preventDefault();
+
+    try {
+      const surveyRef = ref(database, "devSurvey");
+      const newDataRef = push(surveyRef);
+
+      set(newDataRef, formData);
+
+      alert("Thanks for your engements❤️");
+      setError(false);
+      setFormData(initialData);
+    } catch (error) {
+      setError(error.message);
+    }
   };
   return (
     <div className=" flex justify-between gap-16 border border-gray-400 p-10 rounded-l w-full">

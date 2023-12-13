@@ -1,8 +1,8 @@
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { getDatabase } from "firebase/database";
 
 const firebaseConfig = {
-  apiKey: import.meta.env.FIREBASE_API_KEY,
+  apiKey:  process.env.FIREBASE_API_KEY,
   authDomain: "dev-survey-35035.firebaseapp.com",
   databaseURL: "https://dev-survey-35035-default-rtdb.firebaseio.com",
   projectId: "dev-survey-35035",
@@ -12,6 +12,6 @@ const firebaseConfig = {
   measurementId: "G-XFPQ9TCCLC"
 };
 
-// Initialize Firebase
 export const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const database = getDatabase(app);
+export { database };
